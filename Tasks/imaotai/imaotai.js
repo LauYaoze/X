@@ -1,103 +1,103 @@
 /******************************************
- * @name i茅台预约
- * @channel https://t.me/yqc_123/
- * @feedback https://t.me/yqc_777/
- * @author 𝒀𝒖𝒉𝒆𝒏𝒈
- * @update 20231002
- * @version 1.0.0
+* @name i茅台预约
+* @ https://t.me/yqc_123/频道
+* @反馈https://t.me/yqc_777/
+* @作者𝒀𝒖𝒉𝒆𝒏𝒈
+* @更新20231002
+* @版本1.0.0
  ******************************************
-###详细见同目录README
-```Quantumult X
-[mitm]
-hostname = app.moutai519.com.cn
+###详细见同目录自述文件
+` ` Quantumult X
+[米特]
+主机名= app.moutai519.com.cn
 
-[rewrite_local]
-https://app.moutai519.com.cn/xhr/front/user/info url script-response-body https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/imaotai/imaotai.js
+[重写_本地]
+https://app.moutai519.com.cn/xhr/front/user/info URL脚本-响应-正文https://raw . githubusercontent . com/lau yaoze/X/main/Tasks/I motai/I motai . js
 
-[task_local]
+[任务_本地]
 # 茅台自动预约
-0 9 * * * https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/imaotai/imaotai.js, tag=i茅台自动预约, img-url=https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/ae/f4/18/aef41811-955e-e6b0-5d23-6763c2eef1ab/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/144x144.png, enabled=true
+0 9 * * * https://raw . githubusercontent . com/lau yaoze/X/main/Tasks/imao tai/imao tai . js，tag=i茅台自动预约，img-URL = https://is1-SSL . mzstatic . com/image/thumb/purple 116/v4/AE/F4/18/AEF 41811-955 e-e6b 0-5d 23-6763 C2 eef 1 ab/app icon-0-0-1x _ u 007 e marketing-0-0-0-7-0-0-sRGB-0-0-0-gles 2 _ u002c 0-512 MB-85-220-0-0-0 . png
 ```
 ******************************************/
-var $ = new Env('i茅台'),service = $.http
-// 开发方便兼容node
-$.isNode() && (($request = null), ($response = null))
-var CryptoJS = loadCryptoJS()
-var maotai = new Maotai()
+定义变量 $ = 新的包封/包围（动词envelop的简写）(我茅台'),服务 = $.超文本传送协议（Hyper Text Transport Protocol的缩写）
+// 开发方便兼容结节
+$.isNode() && (($request =空), ($response =空))
+定义变量 密码 = loadCryptoJS()
+定义变量 茅台 = 新的茅台()
 // -----------------------------------------------------------------------------------------
 // 配置项
-var isClearShopDir = $.getdata('imaotai__config__clearshopdir') || false // 是否清理店铺字典
-var province = $.getdata('imaotai__config__province') || '' // 省份
-var city = $.getdata('imaotai__config__city') || '' // 城市
-var itemCode = $.getdata('imaotai__config__itemcode') || '10213' // 预约项
-var location = $.getdata('imaotai__config__location') || '' // 地址经纬度
-var address = $.getdata('imaotai__config__address') || '' // 详细地址
-var shopid = $.getdata('imaotai__config__shopid') || '' // 商铺id
-var imaotaiParams = JSON.parse($.getdata('imaotai_params') || '{}') // 抓包参数
-var Message = '' // 消息内容
+定义变量 isClearShopDir = $.获取数据(' imaotai _ _ config _ _ clearshopdir ') || 错误的 // 是否清理店铺字典
+定义变量 省 = $.获取数据(' I毛台_ _配置_ _省') || '' // 省份
+定义变量 城市 = $.获取数据(' imaotai _ _ config _ _ city ') || '' // 城市
+定义变量 项目代码 = $.获取数据(' imaotai _ _ config _ _ itemcode ') || '10213' // 预约项
+定义变量 位置 = $.获取数据(' imaotai _ _ config _ _ location ') || '' // 地址经纬度
+定义变量 地址 = $.获取数据(' imaotai _ _ config _ _ address ') || '' // 详细地址
+定义变量 shopid = $.获取数据(' imaotai__config__shopid ') || '' // 商铺身份证明（identification）
+定义变量 imaotaiParams= JSON。从语法上分析($.获取数据(' imaotai_params ') || '{}') // 抓包参数
+定义变量 消息 = '' // 消息内容
 // -----------------------------------------------------------------------------------------
-// TODO: 后续支持多品预约
-var itemMap = {
-    10213: '贵州茅台酒（癸卯兔年）',
-    2478: '贵州茅台酒（珍品）',
-    10214: '贵州茅台酒（癸卯兔年）x2',
-    10056: '53%vol 500ml 茅台1935'
+// TODO:后续支持多品预约
+定义变量 项目地图 = {
+    10213: '贵州茅台酒（癸卯兔年)',
+    2478: '贵州茅台酒（珍品)',
+    10214: '贵州茅台酒（癸卯兔年)x2 ',
+    10056: 53%体积500毫升茅台1935'
 }
-!(async () => {
+!(异步ˌ非同步(asynchronous) () => {
     // 抓包
-    if ($request && typeof $request === 'object') {
-        if ($request.method === 'OPTIONS') return false
-        // console.log(JSON.stringify($request.headers))
-        var userId = JSON.parse($response.body).data.userId
+    如果 ($请求&&类型of$request ==='对象') {
+        如果 ($请求。方法 === '选项') 返回 错误的
+        //console . log(JSON . stringify($ request . headers))
+        定义变量 使用者辩证码= JSON。从语法上分析($响应。身体).数据.使用者辩证码
         $.setdata(
-            JSON.stringify({
-                headers: $request.headers,
-                userId
+JSON。纤细的({
+                头球:$request。头球,
+                使用者辩证码
             }),
-            'imaotai_params'
+            ' imaotai_params '
         )
-        Message = `抓取数据成功🎉\nuserId:${userId}`
-        return false
+消息=`抓取数据成功🎉\n用户Id:${使用者辩证码}`
+        返回 错误的
     }
-    if (JSON.stringify(imaotaiParams) === '{}') throw `请先开启代理工具对必要参数进行抓包`
-    if (!imaotaiParams.userId || !imaotaiParams.headers['MT-Token']) throw '请先开启代理工具进行抓包相关操作!'
-    if (!province) throw '请在BoxJs中配置省份'
-    if (!city) throw '请在BoxJs中配置城市'
-    if (!itemCode) throw '请在BoxJs中配置预约项'
-    if (!address) throw '请在BoxJs中配置详细地址'
-    if (!location) await queryAddress()
-    $.log(`获取到经纬度：${location}`)
-    if (shopid) maotai.shopId = shopid
-    // 当前时间段如果不是9点 - 10点，不允许预约
-    var _hour = new Date().getHours()
-    if (_hour < 9 || _hour > 10) throw '不在有效的预约时间内'
-    var { headers, userId } = imaotaiParams
-    maotai.headers = Object.assign(maotai.headers, headers)
-    maotai.userId = userId
-    if (!maotai.version) {
-        var version = await maotai.getLatestVersion()
-        maotai.version = version
+    如果 (JSON。纤细的(imaotaiParams) === '{}') 扔 `请先开启代理工具对必要参数进行抓包`
+    如果 (！imaotaiParams。使用者辩证码|| !imaotaiParams。头球[' MT-Token ']) 扔 '请先开启代理工具进行抓包相关操作!'
+    如果 (！省) 扔 '请在BoxJs中配置省份'
+    如果 (！城市) 扔 '请在BoxJs中配置城市'
+    如果 (！项目代码) 扔 '请在BoxJs中配置预约项'
+    如果 (！地址) 扔 '请在BoxJs中配置详细地址'
+    如果 (！位置) 等待 查询地址()
+    $.原木(`获取到经纬度：${位置}`)
+    如果 (shopid)茅台。shopId= shopid
+    // 当前时间段如果不是9点 - 10点,不允许预约
+    定义变量 _小时 = 新的日期().getHours()
+    如果 (_小时<9| | _小时>10) 扔 '不在有效的预约时间内'
+    定义变量 { 头球, 使用者辩证码 }= imaotaiParams
+茅台。头球=对象。分配(茅台。头球，标题)
+茅台。使用者辩证码=用户Id
+    如果 (！茅台。版本) {
+        定义变量 版本 = 等待茅台。getLatestVersion()
+茅台。版本=版本
     }
-    $.log(`当前版本号：${maotai.version}`)
-    if (!maotai.sessionId) {
-        var sessionId = await maotai.getSessionId()
-        maotai.sessionId = sessionId
+    $.原木(`当前版本号：${茅台。版本}`)
+    如果 (！茅台。sessionId) {
+        定义变量 sessionId = 等待茅台。getSessionId()
+茅台。sessionId= sessionId
     }
-    $.log(`获取到sessionId：${maotai.sessionId}`)
-    isClearShopDir && $.setdata(JSON.stringify([]), `imaotai_${province}_${city}_dictionary`)
-    var dictionary = JSON.parse($.getdata(`imaotai_${province}_${city}_dictionary`) || '[]')
-    if (dictionary.length === 0) {
-        dictionary = await maotai.getStoreMap()
-        $.log(`获取到商铺地图数据`)
-        $.setdata(JSON.stringify(dictionary), `imaotai_${province}_${city}_dictionary`)
-    } else {
-        $.log(`从缓存中获取到商铺地图数据`)
+    $.原木(`获取到会话Id:${茅台。sessionId}`)
+isClearShopDir && $。setdata(JSON。纤细的([]), ` imaotai_${省}_${城市}_字典')
+    定义变量 词典= JSON。从语法上分析($.获取数据(` imaotai_${省}_${城市}_字典') || '[]')
+    如果 (字典。长度 === 0) {
+字典=等待茅台。getStoreMap()
+        $.原木(`获取到商铺地图数据`)
+        $.setdata(JSON。纤细的(词典), ` imaotai_${省}_${城市}_字典')
+    } 其他 {
+        $.原木(`从缓存中获取到商铺地图数据`)
     }
-    // $.log(JSON.stringify(dictionary))
-    maotai.dictionary = dictionary
-    if (!maotai.shopId) {
-        var shopId = await maotai.getNearbyStore()
-        maotai.shopId = shopId
+    // $.日志(JSON.stringify(dictionary))
+茅台。词典=字典
+    如果 (！茅台。shopId) {
+        定义变量 shopId = 等待茅台。getNearbyStore()
+茅台。shopId= shopId
     }
     $.log(`获取到最近店铺id：${maotai.shopId}`)
     await maotai.doReserve()
